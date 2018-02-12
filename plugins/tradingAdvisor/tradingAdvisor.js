@@ -16,8 +16,8 @@ var Actor = function(done) {
   this.batcher = new CandleBatcher(config.tradingAdvisor.candleSize);
 
   this.methodName = config.tradingAdvisor.method;
-
-  this.setupTradingMethod();
+  done();
+  // this.setupTradingMethod();
 }
 
 Actor.prototype.setupTradingMethod = function() {
