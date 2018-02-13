@@ -1,6 +1,14 @@
 /*
   MACD - DJM 31/12/2013
   (updated a couple of times since, check git history)
+
+  Calculation:
+
+  MACD Line: (12-day EMA - 26-day EMA)
+
+  Signal Line: 9-day EMA of MACD Line
+
+  MACD Histogram: MACD Line - Signal Line
  */
 
 // helpers
@@ -34,6 +42,23 @@ method.init = function() {
 // what happens on every new candle?
 method.update = function(candle) {
   // nothing!
+}
+
+// for debugging purposes: log the last calculated
+// EMAs and diff.
+method.log = function() {
+  var digits = 8;
+  var macd = this.indicators.macd;
+
+  var diff = macd.diff;
+  var signal = macd.signal.result;
+
+  log.debug('calculated MACD properties for candle:');
+  log.debug('\t', 'short:', macd.short.result.toFixed(digits));
+  log.debug('\t', 'long:', macd.long.result.toFixed(digits));
+  log.debug('\t', 'macd:', diff.toFixed(digits));
+  log.debug('\t', 'signal:', signal.toFixed(digits));
+  log.debug('\t', 'macdiff:', macd.result.toFixed(digits));
 }
 
 method.check = function() {}

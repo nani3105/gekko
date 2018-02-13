@@ -40,12 +40,30 @@ var allowedTulipIndicators = _.keys(tulind);
 var Base = function(settings) {
   _.bindAll(this);
 
+  // properties
+  this.age = 0;
+  this.processedTicks = 0;
   this.setup = false;
   this.settings = settings;
   this.tradingAdvisor = config.tradingAdvisor;
+  // defaults
+  this.requiredHistory = 0;
+  this.priceValue = 'close';
   this.indicators = {};
   this.talibIndicators = {};
   this.tulipIndicators = {};
+  this.asyncTick = false;
+  this.candlePropsCacheSize = 1000;
+
+  this.candleProps = {
+    open: [],
+    high: [],
+    low: [],
+    close: [],
+    volume: [],
+    vwp: [],
+    trades: []
+  };
 
   // make sure we have all methods
   _.each(['init', 'check'], function(fn) {
@@ -141,6 +159,64 @@ Base.prototype.tick = function(candle) {
   }
 
 }
+
+Base.prototype.propogateTick = function(candle) {
+  this.candle = candle;
+
+  this.update(candle);
+
+  var isAllowedToCheck = this.requiredHistory <= this.age;
+
+  // in live mode we might receive more candles
+  // than minimally needed. In that case check
+  // whether candle start time is > startTime
+  var isPremature;
+
+  if(mode === 'realtime'){
+    // Subtract number of minutes in current candle for instant start
+    let startTimeMinusCandleSize = startTime.clone();
+    startTimeMinusCandleSize.subtract(this.tradingAdvisor.candleSize, "minutes");
+
+    isPremature = candle.start < startTimeMinusCandleSize;
+  }
+  else {
+    isPremature = false;
+  }
+
+  if(isAllowedToCheck && !isPremature) {
+    this.log(candle);
+    this.check(candle);
+  }
+  this.processedTicks++;
+}
+
+Base.prototype.advice = function(newPosition, _candle) {
+  // ignore soft advice coming from legacy
+  // strategies.
+  if(!newPosition)
+    return;
+
+  // ignore if advice equals previous advice
+  if(newPosition === this._prevAdvice)
+    return;
+
+  // cache the candle this advice is based on
+  if(_candle)
+    var candle = _candle;
+  else
+    var candle = this.candle;
+
+  this._prevAdvice = newPosition;
+
+  _.defer(function() {
+    this.emit('advice', {
+      recommendation: newPosition,
+      portfolio: 1,
+      candle
+    });
+  }.bind(this));
+}
+
 
 Base.prototype.addIndicator = function(name, type, parameters) {
   if(!_.contains(allowedIndicators, type))
