@@ -12,6 +12,16 @@ var Reader = function Reader () {
   this.pair = mongoUtil.settings.pair.join('_');
 }
 
+Reader.prototype.get = function get (from, to, what, next) { // returns all fields in general
+  // Find some documents
+  this.collection.find({ pair: this.pair, start: { $gte: from, $lte: to } }).sort({ start: 1 }, (err, docs) => {
+    if (err) {
+      return util.die('DB error at `get`');
+    }
+    return next(null, docs);
+  });
+}
+
 Reader.prototype.countTotal = function countTotal (next) {
   this.collection.count({ pair: this.pair }, (err, count) => {
     if (err) {
@@ -41,6 +51,10 @@ Reader.prototype.getBoundry = function getBoundry (next) {
 
 Reader.prototype.tableExists = function(name, next) {
   return next(null, true); // Return true for backtest
+}
+
+Reader.prototype.close = function close () {
+  this.db = null;
 }
 
 module.exports = Reader;

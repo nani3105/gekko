@@ -16,8 +16,10 @@ var Actor = function(done) {
   this.batcher = new CandleBatcher(config.tradingAdvisor.candleSize);
 
   this.methodName = config.tradingAdvisor.method;
+
+  this.setupTradingMethod();
+
   done();
-  // this.setupTradingMethod();
 }
 
 Actor.prototype.setupTradingMethod = function() {
@@ -52,5 +54,25 @@ Actor.prototype.setupTradingMethod = function() {
     .on('candle', this.processCustomCandle);
 }
 
+// HANDLERS
+// process the 1m candles
+Actor.prototype.processCandle = function(candle, done) {
+  this.batcher.write([candle]);
+  done();
+}
+
+// propogate a custom sized candle to the trading method
+Actor.prototype.processCustomCandle = function(candle) {
+  this.method.tick(candle);
+}
+
+Actor.prototype.processTrade = function(trade) {
+  this.method.processTrade(trade);
+}
+
+// EMITTERS
+Actor.prototype.relayAdvice = function(advice) {
+  this.emit('advice', advice);
+}
 
 module.exports = Actor;

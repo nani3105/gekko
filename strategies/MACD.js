@@ -36,3 +36,6 @@ method.update = function(candle) {
   // nothing!
 }
 
+method.check = function() {}
+
+module.exports = method;

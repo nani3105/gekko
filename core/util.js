@@ -1,8 +1,11 @@
+var moment = require('moment');
 var _ = require('lodash');
 var fs = require('fs');
 var program = require('commander');
 var retry = require('retry');
 var Errors = require('./error');
+
+var startTime = moment();
 
 var _config = false;
 var _package = false;
@@ -37,6 +40,10 @@ var util = {
 
         _config = require(util.dirs().gekko + program.config);
         return _config;
+    },
+    // overwrite the whole config
+    setConfig: function(config) {
+      _config = config;
     },
     gekkoEnv: function() {
       return _gekkoEnv || 'standalone';
@@ -126,6 +133,9 @@ var util = {
           return true;
         else
           return false;
+    },
+    getStartTime: function() {
+      return startTime;
     },
     retryCustom: function(options, fn, callback) {
       retryHelper(fn, options, callback);
