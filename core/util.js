@@ -59,6 +59,9 @@ var util = {
       else
         return 'realtime';
     },
+    setGekkoEnv: function(env) {
+      _gekkoEnv = env;
+    },
     dirs: function() {
         var ROOT = __dirname + '/../';
 

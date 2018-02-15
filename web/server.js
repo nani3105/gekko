@@ -16,6 +16,7 @@ const app = koa();
 const WEBROOT = __dirname + '/';
 const ROUTE = n => WEBROOT + 'routes/' + n;
 
+router.post('/api/backtest', require(ROUTE('backtest')));
 router.post('/api/scansets', require(ROUTE('scanDatasets')));
 
 app

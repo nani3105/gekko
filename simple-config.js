@@ -109,7 +109,7 @@ config.adapter = 'mongodb';
 config.mongodb = {
   path: 'plugins/mongodb',
   version: 0.1,
-  connectionString: 'mongodb://127.0.0.1:27017/gekko', // connection to mongodb server
+  connectionString: 'mongodb://54.202.167.66:27017/gekko', // connection to mongodb server
   dependencies: [{
     module: 'mongojs',
     version: '2.4.0'
