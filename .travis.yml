@@ -1,3 +1,24 @@
 language: node_js
+
 node_js:
-  - "8.0.0"
+  - "8"
+
+sudo: required
+
+services:
+  - docker
+
+deploy:
+  provider: elasticbeanstalk
+  access_key_id: $ACCESSKEYID
+  secret_access_key:
+    secure: "$SECRETACCESSKEY"
+  region: "ca-central-1"
+  app: "gekko"
+  env: "gekko-dev"
+  bucket_name: "gekko-bucket"
+  on:
+    branch: master
+
+after_deploy:
+  - echo "done deploying"

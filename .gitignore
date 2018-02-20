@@ -49,3 +49,8 @@ config-*.js
 private-*.js
 private-*.toml
 SECRET-api-keys.json
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
