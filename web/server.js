@@ -9,15 +9,55 @@ const bodyParser = require('koa-bodyparser');
 const opn = require('opn');
 const server = require('http').createServer();
 const router = require('koa-router')();
+const ws = require('ws');
 const app = koa();
+
+const WebSocketServer = require('ws').Server;
+const wss = new WebSocketServer({ server: server });
+
+const cache = require('./state/cache');
+const ListManager = require('./state/listManager');
+
+wss.on('connection', (ws) => {
+  ws.on('error', (err) => {
+    // Ignore network errors like `ECONNRESET`, `EPIPE`, etc.
+    if (err.errno) return;
+    throw err;
+  });
+});
+
+// broadcast function
+const broadcast = data => {
+  if(_.isEmpty(data))
+    return;
+
+  wss.clients.forEach(client => {
+    client.send(JSON.stringify(data))
+  });
+}
+cache.set('broadcast', broadcast);
+
+// initialize lists and dump into cache
+cache.set('imports', new ListManager);
+cache.set('apiKeyManager', require('./apiKeyManager'));
 
 // setup API routes
 
 const WEBROOT = __dirname + '/';
 const ROUTE = n => WEBROOT + 'routes/' + n;
 
+const apiKeys = require(ROUTE('apiKeys'));
+router.get('/api/strategies', require(ROUTE('strategies')));
+router.get('/api/configPart/:part', require(ROUTE('configPart')));
+router.get('/api/apiKeys', apiKeys.get);
 router.post('/api/backtest', require(ROUTE('backtest')));
+
+const listWraper = require(ROUTE('list'));
+router.get('/api/imports', listWraper('imports'));
+
+router.get('/api/exchanges', require(ROUTE('exchanges')));
 router.post('/api/scansets', require(ROUTE('scanDatasets')));
+router.post('/api/import', require(ROUTE('import')));
 
 app
   .use(cors())

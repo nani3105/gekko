@@ -62,6 +62,9 @@ var util = {
     setGekkoEnv: function(env) {
       _gekkoEnv = env;
     },
+    setGekkoMode: function(mode) {
+      _gekkoMode = mode;
+    },
     dirs: function() {
         var ROOT = __dirname + '/../';
 

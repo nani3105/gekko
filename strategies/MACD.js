@@ -1,14 +1,6 @@
 /*
   MACD - DJM 31/12/2013
   (updated a couple of times since, check git history)
-
-  Calculation:
-
-  MACD Line: (12-day EMA - 26-day EMA)
-
-  Signal Line: 9-day EMA of MACD Line
-
-  MACD Histogram: MACD Line - Signal Line
  */
 
 // helpers
@@ -61,6 +53,79 @@ method.log = function() {
   log.debug('\t', 'macdiff:', macd.result.toFixed(digits));
 }
 
-method.check = function() {}
+method.check = function() {
+  var macddiff = this.indicators.macd.result;
+
+  if(macddiff > this.settings.thresholds.up) {
+
+    // new trend detected
+    if(this.trend.direction !== 'up')
+      // reset the state for the new trend
+      this.trend = {
+        duration: 0,
+        persisted: false,
+        direction: 'up',
+        adviced: false
+      };
+
+    this.trend.duration++;
+
+    log.debug('In uptrend since', this.trend.duration, 'candle(s)');
+
+    if(this.trend.duration >= this.settings.thresholds.persistence)
+      this.trend.persisted = true;
+
+    if(this.trend.persisted && !this.trend.adviced) {
+      this.trend.adviced = true;
+      this.advice('long');
+    } else
+      this.advice();
+
+  } else if(macddiff < this.settings.thresholds.down) {
+
+    // new trend detected
+    if(this.trend.direction !== 'down')
+      // reset the state for the new trend
+      this.trend = {
+        duration: 0,
+        persisted: false,
+        direction: 'down',
+        adviced: false
+      };
+
+    this.trend.duration++;
+
+    log.debug('In downtrend since', this.trend.duration, 'candle(s)');
+
+    if(this.trend.duration >= this.settings.thresholds.persistence)
+      this.trend.persisted = true;
+
+    if(this.trend.persisted && !this.trend.adviced) {
+      this.trend.adviced = true;
+      this.advice('short');
+    } else
+      this.advice();
+
+  } else {
+
+    log.debug('In no trend');
+
+    // we're not in an up nor in a downtrend
+    // but for now we ignore sideways trends
+    //
+    // read more @link:
+    //
+    // https://github.com/askmike/gekko/issues/171
+
+    // this.trend = {
+    //   direction: 'none',
+    //   duration: 0,
+    //   persisted: false,
+    //   adviced: false
+    // };
+
+    this.advice();
+  }
+}
 
 module.exports = method;

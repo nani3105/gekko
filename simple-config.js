@@ -26,10 +26,36 @@ config.watch = {
 
 config.tradingAdvisor = {
   enabled: true,
-  method: 'MACD',
+  method: 'RSI',
   candleSize: 60,
   historySize: 10,
 }
+
+// RSI settings:
+config.RSI = {
+  interval: 14,
+  thresholds: {
+    low: 30,
+    high: 70,
+    // How many candle intervals should a trend persist
+    // before we consider it real?
+    persistence: 1
+  }
+};
+
+
+// Exponential Moving Averages settings:
+config.DEMA = {
+  // EMA weight (α)
+  // the higher the weight, the more smooth (and delayed) the line
+  weight: 21,
+  // amount of candles to remember and base initial EMAs on
+  // the difference between the EMAs (to act as triggers)
+  thresholds: {
+    down: -0.025,
+    up: 0.025
+  }
+};
 
 // MACD settings:
 config.MACD = {
@@ -138,6 +164,30 @@ config.importer = {
 config.backtest = {
   daterange: 'scan',
   batchSize: 50
+}
+
+// do you want Gekko to simulate the profit of the strategy's own advice?
+config.paperTrader = {
+  enabled: true,
+  // report the profit in the currency or the asset?
+  reportInCurrency: true,
+  // start balance, on what the current balance is compared with
+  simulationBalance: {
+    // these are in the unit types configured in the watcher.
+    asset: 1,
+    currency: 100,
+  },
+  // how much fee in % does each trade cost?
+  feeMaker: 0.15,
+  feeTaker: 0.25,
+  feeUsing: 'maker',
+  // how much slippage/spread should Gekko assume per trade?
+  slippage: 0.05,
+}
+
+config.performanceAnalyzer = {
+  enabled: true,
+  riskFreeReturn: 5
 }
 
 

@@ -11,7 +11,8 @@
             "program": "${workspaceFolder}/gekko.js",
             "args": [
                 "--config", "simple-config.js", "--ui"
-            ]
+            ],
+            "runtimeExecutable": "/Users/kurraniranjan31/.nvm/versions/node/v7.10.1/bin/node"
         }
     ]
 }

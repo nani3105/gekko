@@ -42,6 +42,14 @@ var plugins = [
     path: config => 'tradingAdvisor/tradingAdvisor.js',
   },
   {
+    name: 'Performance Analyzer',
+    description: 'Analyzes performances of trades',
+    slug: 'performanceAnalyzer',
+    async: false,
+    modes: ['realtime', 'backtest'],
+    path: config => 'performanceAnalyzer/performanceAnalyzer.js',
+  },
+  {
     name: 'Paper Trader',
     description: 'Paper trader that simulates fake trades.',
     slug: 'paperTrader',

@@ -18,6 +18,8 @@
     "async": "2.1.2",
     "binance": "^1.3.1",
     "commander": "^2.13.0",
+    "co-fs": "^1.2.0",
+    "humanize-duration": "^3.10.0",
     "koa": "^1.2.0",
     "koa-bodyparser": "^2.2.0",
     "koa-cors": "0.0.16",
@@ -31,7 +33,9 @@
     "promisify-node": "^0.4.0",
     "prompt-lite": "0.1.1",
     "retry": "^0.10.1",
-    "relieve": "^2.1.3"
+    "relieve": "^2.1.3",
+    "stats-lite": "^2.0.4",
+    "tiny-promisify": "^0.1.1"
   },
   "engines": {
     "node": ">=6.0"
