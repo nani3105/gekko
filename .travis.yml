@@ -16,7 +16,8 @@ deploy:
   region: "us-west-2"
   app: "gekko"
   env: "gekko-dev"
-  bucket_name: "gekko-bucket"
+  skip_cleanup: true
+  zip-file: 'ebs.zip'
   on:
     branch: master
 
