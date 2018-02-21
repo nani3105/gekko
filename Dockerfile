@@ -21,6 +21,8 @@ RUN npm install --only=production && \
 COPY . /usr/src/app
 
 EXPOSE 3000
+RUN chmod +x /usr/src/app/docker-entrypoint.sh
+ENTRYPOINT ["/usr/src/app/docker-entrypoint.sh"]
 
 CMD ["npm", "start"]
 
