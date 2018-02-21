@@ -3,9 +3,13 @@ os: linux
 files:
   - source: ./
     destination: /tmp
- permissions:
-   - object: ./load_image.sh
-     mode: 644
+permissions:
+  - object: /tmp
+    pattern: "**/*.sh"
+    mode: 644
+    owner: ec2-user
+    type:
+      - file
 hooks:
   ApplicationStop:
     - location: ./scripts/kill_container.sh
