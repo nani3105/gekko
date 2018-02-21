@@ -12,21 +12,23 @@ cache:
   directories:
     - node_modules
 
+before_deploy:
+  - zip -r latest *
+  - mkdir -p dpl_cd_upload
+  - mv latest.zip dpl_cd_upload/latest.zip
+
 deploy:
 - provider: s3
   access_key_id: $AWS_ACCESS_KEY
-  secret_access_key:
+  secret_access_key: &1
     secure: "$AWS_SECRET_KEY"
-  region: "us-west-2"
-  bucket: gekko-node
   local_dir: dpl_cd_upload
   skip_cleanup: true
-  on:
+  on: &2
     branch: master
-
 - provider: codedeploy
   access_key_id: $AWS_ACCESS_KEY
-  secret_access_key: $AWS_SECRET_KEY
+  secret_access_key: *1
   bucket: gekko-node
   key: latest.zip
   bundle_type: zip
@@ -37,8 +39,3 @@ deploy:
 
 after_deploy:
   - echo "done deploying"
-
-script:
-  - zip -r latest *
-  - mkdir -p dpl_cd_upload
-  - mv latest.zip dpl_cd_upload/latest.zip
