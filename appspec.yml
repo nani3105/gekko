@@ -3,6 +3,9 @@ os: linux
 files:
   - source: ./
     destination: /tmp
+ permissions:
+   - object: ./load_image.sh
+     mode: 644
 hooks:
   ApplicationStop:
     - location: ./scripts/kill_container.sh
