@@ -2,12 +2,12 @@ version: 0.0
 os: linux
 files:
   - source: ./
-    destination: /tmp
+    destination: /tmp/gekko
 permissions:
-  - object: /tmp
-    pattern: "**/*.sh"
-    mode: 777
+  - object: /tmp/gekko
+    pattern: "*.sh"
     owner: ec2-user
+    mode: 777
     type:
       - file
 hooks:
