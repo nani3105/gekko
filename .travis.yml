@@ -24,6 +24,8 @@ deploy:
     secure: "$AWS_SECRET_KEY"
   local_dir: dpl_cd_upload
   skip_cleanup: true
+  bucket: gekko-node
+  region: "us-west-2"
   on: &2
     branch: master
 - provider: codedeploy
