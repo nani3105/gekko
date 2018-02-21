@@ -13,7 +13,7 @@ cache:
     - node_modules
 
 deploy:
-  provider: s3
+- provider: s3
   access_key_id: $AWS_ACCESS_KEY
   secret_access_key:
     secure: "$AWS_SECRET_KEY"
@@ -23,6 +23,17 @@ deploy:
   skip_cleanup: true
   on:
     branch: master
+
+- provider: codedeploy
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
+  bucket: gekko-node
+  key: latest.zip
+  bundle_type: zip
+  application: gekko
+  deployment_group: gekkoDeploymentGroup
+  region: "us-west-2"
+  on: *2
 
 after_deploy:
   - echo "done deploying"
