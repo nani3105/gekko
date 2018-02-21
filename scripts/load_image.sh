@@ -2,4 +2,4 @@
 
 set -e
 
-docker build -t nani3105/gekko .
+docker build -t nani3105/gekko ../
