@@ -6,7 +6,7 @@ files:
 permissions:
   - object: /tmp
     pattern: "**/*.sh"
-    mode: 644
+    mode: 777
     owner: ec2-user
     type:
       - file
